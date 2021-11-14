@@ -284,6 +284,17 @@ func (ec *Client) TransactionReceipt(ctx context.Context, txHash common.Hash) (*
 	return r, err
 }
 
+func (ec *Client) DebugTraceTransaction(ctx context.Context, txHash common.Hash) (*types.ExecutionResurt, error) {
+	var r *types.ExecutionResurt
+	err := ec.c.CallContext(ctx, &r, "debug_traceTransaction", txHash, types.TraceTransactionOption{Tracer: "callTracer"})
+	if err == nil {
+		if r == nil {
+			return nil, ethereum.NotFound
+		}
+	}
+	return r, err
+}
+
 type rpcProgress struct {
 	StartingBlock hexutil.Uint64
 	CurrentBlock  hexutil.Uint64
